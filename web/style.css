@@ -49,6 +49,7 @@
   --slate-deep: #2b455d;
   --slate-soft: #e9f0f6;
   --on-slate: #faf8f4;
+  --sky-bird: #6d859c;
   --eye: #c8231d;
   --ok: #1d7a46;
   --ok-soft: #e7f3ec;
@@ -78,6 +79,7 @@
     --slate-deep: #9bc0e2;
     --slate-soft: #1b2734;
     --on-slate: #121417;
+    --sky-bird: #7da2c4;
     --eye: #e04a43;
     --ok: #46b877;
     --ok-soft: #162920;
@@ -1772,4 +1774,147 @@ td.diff {
 html.has-cursor.cursor-in,
 html.has-cursor.cursor-in * {
   cursor: none;
+}
+
+/* Misty ink-wash background flying koels: zero obstruction to controls or text */
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+.bg-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--sky-bird);
+}
+.sky-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.sky-bird {
+  position: absolute;
+  top: 12%;
+  left: 0;
+  width: 38px;
+  height: 38px;
+  opacity: 0.14;
+  transform: translate3d(-8vw, 0, 0);
+  will-change: transform;
+}
+.sky-bird svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: currentColor;
+}
+.sky-wing {
+  transform-box: view-box;
+  transform-origin: 268px 208px;
+}
+.sky-b1 {
+  top: 9%;
+  width: 38px;
+  opacity: 0.15;
+  --dur: 32s;
+  --del: -15.5s;
+  --flap: 0.44s;
+}
+.sky-b2 {
+  top: 13%;
+  width: 28px;
+  opacity: 0.11;
+  --dur: 42s;
+  --del: -16.5s;
+  --flap: 0.52s;
+}
+.sky-b3 {
+  top: 34%;
+  width: 46px;
+  opacity: 0.16;
+  --dur: 28s;
+  --del: -21s;
+  --flap: 0.4s;
+}
+.sky-b4 {
+  top: 56%;
+  width: 36px;
+  opacity: 0.14;
+  --dur: 38s;
+  --del: -3.2s;
+  --flap: 0.48s;
+}
+.sky-b5 {
+  top: 78%;
+  width: 30px;
+  opacity: 0.12;
+  --dur: 46s;
+  --del: -38.5s;
+  --flap: 0.54s;
+}
+@media (prefers-color-scheme: dark) {
+  .sky-b1 {
+    opacity: 0.14;
+  }
+  .sky-b2 {
+    opacity: 0.1;
+  }
+  .sky-b3 {
+    opacity: 0.15;
+  }
+  .sky-b4 {
+    opacity: 0.12;
+  }
+  .sky-b5 {
+    opacity: 0.1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sky-bird {
+    animation: sky-glide var(--dur, 36s) linear var(--del, 0s) infinite;
+  }
+  .sky-bird svg {
+    animation: sky-bob 5.5s ease-in-out var(--del, 0s) infinite;
+  }
+  .sky-wing {
+    animation: sky-flap var(--flap, 0.46s) cubic-bezier(0.4, 0, 0.6, 1) var(--del, 0s) infinite
+      alternate;
+  }
+  .sky-wing-far {
+    animation-delay: calc(var(--del, 0s) - 0.08s);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-sky {
+    opacity: 0;
+  }
+}
+@keyframes sky-glide {
+  from {
+    transform: translate3d(-8vw, 0, 0);
+  }
+  to {
+    transform: translate3d(108vw, -28px, 0);
+  }
+}
+@keyframes sky-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes sky-flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.78);
+  }
 }
