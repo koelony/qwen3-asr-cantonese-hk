@@ -6,28 +6,55 @@ const pending = new Map();
 const hist = [];
 window.__hkasr = { log: [] };
 
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 function badge(cls, txt) { const b = $("badge"); b.className = "badge " + cls; b.textContent = txt; }
 function step(n, state) { const el = $("step" + n); if (el) el.dataset.state = state; }
 const fmtMB = (b) => (b / 1048576).toFixed(0) + " MB";
+
+function setLoadStage(stage) {
+  const host = $("loadStages");
+  if (!host) return;
+  host.hidden = false;
+  const order = ["download", "compile", "ready"];
+  const idx = order.indexOf(stage);
+  for (const el of host.querySelectorAll("[data-stage]")) {
+    const i = order.indexOf(el.dataset.stage);
+    el.className = i < idx || stage === "ready" ? "done" : i === idx ? "active" : "";
+  }
+}
+
+let pendingSample = null;
 
 worker.onmessage = (e) => {
   const m = e.data;
   window.__hkasr.log.push({ t: performance.now(), type: m.type, msg: m.msg });
   if (m.type === "progress") {
-    $("prog").hidden = false; $("bar").style.width = (100 * m.done / m.total).toFixed(1) + "%";
+    $("prog").hidden = false; $("prog").classList.remove("done");
+    $("bar").style.width = Math.min(92, (92 * m.done) / Math.max(m.total, 1)).toFixed(1) + "%";
+    setLoadStage("download");
     $("loadMsg").textContent = `${m.cached >= m.done ? "由 cache 讀取" : "下載中"}：${fmtMB(m.done)} / ${fmtMB(m.total)}（${m.file}）`;
   } else if (m.type === "status") {
+    $("prog").hidden = false;
+    $("bar").style.width = "96%";
+    setLoadStage("compile");
     $("loadMsg").textContent = m.msg;
   } else if (m.type === "ready") {
     ready = true;
     const be = m.backend === "webgpu" ? "WebGPU" : `CPU（WASM ${m.threads} 線程${m.coi ? "" : "，冇 cross-origin isolation"}）`;
+    $("prog").hidden = false; $("prog").classList.add("done"); $("bar").style.width = "100%";
+    setLoadStage("ready");
     badge("ok", "已載入 · " + be);
     $("loadMsg").textContent = `模型準備好（${m.loadSec.toFixed(1)} 秒）。後端：${be}`;
     $("inputCard").removeAttribute("aria-disabled");
     step(1, "done"); step(2, "active");
     $("loadBtn").disabled = true; $("loadBtn").textContent = "模型已載入"; $("backend").disabled = true;
+    const slb = $("sampleLoadBtn"); if (slb) slb.hidden = true;
     window.__hkasr.ready = m;
     pending.get("init")?.resolve(m); pending.delete("init");
+    if (pendingSample) {
+      const s = pendingSample; pendingSample = null;
+      runSampleTranscribe(s.url, s.label).catch(() => {});
+    }
   } else if (m.type === "partial") {
     const p = pending.get(m.id); if (p?.onPartial) p.onPartial(m);
   } else if (m.type === "result") {
@@ -53,6 +80,7 @@ async function loadModel() {
   await modelsReady;
   const m = MODELS.find((x) => x.id === $("model").value) || MODELS[0];
   $("loadBtn").disabled = true; $("model").disabled = true; badge("busy", "載入中…");
+  setLoadStage("download");
   return new Promise((resolve, reject) => {
     pending.set("init", { resolve, reject });
     worker.postMessage({ type: "init", prefer: $("backend").value, modelDir: m.dir, modelId: m.id });
@@ -122,14 +150,154 @@ function renderHist() {
   }
 }
 
+// ---------- 3 built-in Cantonese sample clips ----------
+let sampleAudio = null, sampleBtnActive = null;
+async function runSampleTranscribe(url, label) {
+  const st = $("sampleStatus");
+  if (st) { st.hidden = false; st.textContent = `轉寫緊「${label}」…`; }
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  await transcribeBuffer(buf, label);
+  if (st) st.textContent = `已完成「${label}」轉寫。`;
+}
+
+for (const btn of document.querySelectorAll(".sample-btn")) {
+  btn.onclick = async () => {
+    const url = btn.dataset.sample, label = btn.dataset.label;
+    if (sampleAudio) { sampleAudio.pause(); sampleAudio = null; }
+    if (sampleBtnActive === btn) {
+      btn.classList.remove("playing");
+      btn.querySelector(".sample-ico").textContent = "▶";
+      sampleBtnActive = null;
+      return;
+    }
+    for (const b of document.querySelectorAll(".sample-btn")) {
+      b.classList.remove("playing");
+      b.querySelector(".sample-ico").textContent = "▶";
+    }
+    const audio = new Audio(url);
+    sampleAudio = audio;
+    sampleBtnActive = btn;
+    btn.classList.add("playing");
+    btn.querySelector(".sample-ico").textContent = "■";
+    audio.onended = () => {
+      if (sampleAudio === audio) {
+        btn.classList.remove("playing");
+        btn.querySelector(".sample-ico").textContent = "▶";
+        sampleBtnActive = null; sampleAudio = null;
+      }
+    };
+    audio.play().catch(() => {});
+
+    const st = $("sampleStatus"), slb = $("sampleLoadBtn");
+    if (ready) {
+      if (slb) slb.hidden = true;
+      await runSampleTranscribe(url, label).catch(() => {});
+    } else {
+      pendingSample = { url, label };
+      if (st) { st.hidden = false; st.textContent = `播放緊「${label}」—— 載入 0.6B 模型即可轉寫呢段音頻：`; }
+      if (slb) slb.hidden = false;
+    }
+  };
+}
+if ($("sampleLoadBtn")) {
+  $("sampleLoadBtn").onclick = () => {
+    if (device.mobile && !mobileAck) {
+      const n = $("mobileNotice"); n.hidden = false; n.classList.remove("shake"); void n.offsetWidth; n.classList.add("shake");
+      n.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    $("sampleLoadBtn").disabled = true;
+    loadModel().catch(() => { $("sampleLoadBtn").disabled = false; });
+  };
+}
+
+// ---------- file drop & mic recording + live WebAudio waveform ----------
 $("file").onchange = async (e) => { const f = e.target.files[0]; if (f) await transcribeBuffer(await f.arrayBuffer(), f.name).catch(() => {}); e.target.value = ""; };
 const drop = $("drop");
 drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
 drop.ondragleave = () => drop.classList.remove("over");
 drop.ondrop = async (e) => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) await transcribeBuffer(await f.arrayBuffer(), f.name).catch(() => {}); };
 
+const waveCanvas = $("waveCanvas");
+let waveCtx = null, waveAudioCtx = null, waveAnalyser = null, waveRaf = 0;
+function drawWaveBaseline() {
+  if (!waveCanvas) return;
+  const ctx = waveCtx || (waveCtx = waveCanvas.getContext("2d"));
+  if (!ctx) return;
+  const w = waveCanvas.width, h = waveCanvas.height, mid = h / 2;
+  const cs = getComputedStyle(document.documentElement);
+  const hair = cs.getPropertyValue("--hair").trim() || "#c9c2b6";
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = hair;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, mid);
+  ctx.lineTo(w, mid);
+  ctx.stroke();
+}
+drawWaveBaseline();
+
+function startWaveMonitor(stream) {
+  if (!waveCanvas || reduceMotion) return;
+  const ctx = waveCtx || (waveCtx = waveCanvas.getContext("2d"));
+  if (!ctx) return;
+  let data = null;
+  try {
+    waveAudioCtx = new AudioContext();
+    const src = waveAudioCtx.createMediaStreamSource(stream);
+    waveAnalyser = waveAudioCtx.createAnalyser();
+    waveAnalyser.fftSize = 128;
+    src.connect(waveAnalyser);
+    data = new Uint8Array(waveAnalyser.frequencyBinCount);
+  } catch {
+    waveAnalyser = null;
+  }
+  let phase = 0;
+  const render = () => {
+    const w = waveCanvas.width, h = waveCanvas.height, mid = h / 2;
+    const cs = getComputedStyle(document.documentElement);
+    const ink = cs.getPropertyValue("--ink").trim() || "#1c1b19";
+    const eye = cs.getPropertyValue("--eye").trim() || "#c8231d";
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 1.75;
+    ctx.beginPath();
+    if (waveAnalyser && data) {
+      waveAnalyser.getByteTimeDomainData(data);
+      const stepX = w / (data.length - 1);
+      for (let i = 0; i < data.length; i++) {
+        const v = (data[i] - 128) / 128;
+        const y = mid + v * (h * 0.44);
+        if (i === 0) ctx.moveTo(0, y); else ctx.lineTo(i * stepX, y);
+      }
+    } else {
+      phase += 0.14;
+      for (let x = 0; x <= w; x += 4) {
+        const env = Math.sin((x / w) * Math.PI);
+        const y = mid + Math.sin(x * 0.08 + phase) * env * 9;
+        if (x === 0) ctx.moveTo(0, y); else ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+    ctx.fillStyle = eye;
+    ctx.beginPath();
+    ctx.arc(w / 2, mid, 3.2, 0, Math.PI * 2);
+    ctx.fill();
+    waveRaf = requestAnimationFrame(render);
+  };
+  waveRaf = requestAnimationFrame(render);
+}
+function stopWaveMonitor() {
+  cancelAnimationFrame(waveRaf); waveRaf = 0;
+  if (waveAudioCtx) { waveAudioCtx.close().catch(() => {}); waveAudioCtx = null; }
+  waveAnalyser = null;
+  drawWaveBaseline();
+}
+
 let rec = null, recChunks = [], recT0 = 0, recTimer = 0;
 function setRecUI(on) {
+  document.body.classList.toggle("is-recording", on);
   $("recBtn").classList.toggle("rec", on); $("recBtn").setAttribute("aria-label", on ? "停止並轉文字" : "錄音");
   $("recLabel").textContent = on ? "錄緊…再撳一下停止並轉文字" : "撳一下開始錄音";
   $("recTime").hidden = !on; if (on) $("recTime").textContent = "00:00";
@@ -142,19 +310,25 @@ $("recBtn").onclick = async () => {
     rec.ondataavailable = (e) => e.data.size && recChunks.push(e.data);
     rec.onstop = async () => {
       stream.getTracks().forEach((t) => t.stop()); clearInterval(recTimer);
-      setRecUI(false); rec = null;
+      stopWaveMonitor(); setRecUI(false); rec = null;
       const blob = new Blob(recChunks, { type: recChunks[0]?.type || "audio/webm" });
       await transcribeBuffer(await blob.arrayBuffer(), "錄音 " + new Date().toLocaleTimeString("zh-HK")).catch(() => {});
     };
     rec.start(); recT0 = Date.now();
     setRecUI(true);
+    startWaveMonitor(stream);
     recTimer = setInterval(() => { const s = Math.floor((Date.now() - recT0) / 1000); $("recTime").textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }, 250);
   } catch (err) { $("outCard").hidden = false; $("stats").textContent = "開唔到咪：" + err.message; }
 };
 $("copyBtn").onclick = async () => {
-  try { await navigator.clipboard.writeText($("out").textContent); flash($("copyBtn"), "已複製 ✓"); } catch { flash($("copyBtn"), "複製唔到"); }
+  try { await navigator.clipboard.writeText($("out").textContent); flash($("copyBtn"), "已複製 ✓", true); } catch { flash($("copyBtn"), "複製唔到"); }
 };
-function flash(btn, txt) { const o = btn.dataset.label || btn.textContent; btn.dataset.label = o; btn.textContent = txt; setTimeout(() => (btn.textContent = o), 1600); }
+function flash(btn, txt, ok = false) {
+  const o = btn.dataset.label || btn.textContent;
+  btn.dataset.label = o; btn.textContent = txt;
+  if (ok) btn.classList.add("copied");
+  setTimeout(() => { btn.textContent = o; btn.classList.remove("copied"); }, 1600);
+}
 
 // ---------- self test (?selftest=1[&backend=wasm]) ----------
 const normCER = (s) => s.toLowerCase().replace(/[\p{P}\p{S}\s]/gu, "");
@@ -219,44 +393,13 @@ $("shareLinkBtn").onclick = async () => {
   const url = location.origin + location.pathname;
   try {
     if (navigator.share) { await navigator.share({ title: "Koelony：廣東話語音轉文字", text: "用電腦開嚟試：", url }); return; }
-    await navigator.clipboard.writeText(url); flash($("shareLinkBtn"), "已複製網址 ✓");
+    await navigator.clipboard.writeText(url); flash($("shareLinkBtn"), "已複製網址 ✓", true);
   } catch (e) { if (e?.name !== "AbortError") flash($("shareLinkBtn"), url); }
 };
 
 if (device.mac) { $("oraYou").hidden = false; $("oraYou").textContent = "你用緊 Mac：可以即刻裝嚟用"; }
 else if (device.mobile) { $("oraYou").hidden = false; $("oraYou").textContent = "返到 Mac 再開呢頁就裝得"; }
 
-// accuracy chart: 0.6B fine-tune vs 1.7B v2.1 (CER %, from the repo README)
-{
-  const rows = [
-    ["FLEURS", "yue_hant_hk", 5.70, 3.89], ["Common Voice", "yue", 5.12, 3.94], ["Common Voice 23", "zh-HK", 6.44, 5.02],
-    ["MDCC", "", 3.29, 2.47], ["MCE", "中英夾雜", 6.98, 5.52], ["LegCo", "立法會", 7.62, 7.16],
-  ];
-  const max = 8, host = $("chartRows");
-  for (const [name, sub, a, b] of rows) {
-    const d = document.createElement("div"); d.className = "crow"; d.setAttribute("role", "row");
-    d.innerHTML = `<div class="crow-name" role="rowheader"></div><div class="bars"><div class="b b6"></div><div class="b b17"></div></div><div class="crow-num" role="cell"></div>`;
-    d.querySelector(".crow-name").append(name, Object.assign(document.createElement("small"), { textContent: sub }));
-    d.querySelector(".crow-num").innerHTML = `${a.toFixed(2)}%<br><b>${b.toFixed(2)}%</b><br><span class="crow-delta">−${Math.round((1 - b / a) * 100)}%</span>`;
-    d.querySelector(".b6").dataset.w = (a / max) * 100; d.querySelector(".b17").dataset.w = (b / max) * 100;
-    host.appendChild(d);
-  }
-}
-
-// grow the chart bars when the chart scrolls into view (sections themselves do not animate)
-{
-  const els = document.querySelectorAll(".chart");
-  const grow = (root) => root.querySelectorAll(".b").forEach((b) => (b.style.width = b.dataset.w + "%"));
-  if (!("IntersectionObserver" in window)) { grow(document); }
-  else {
-    const io = new IntersectionObserver((es) => es.forEach((e) => {
-      if (!e.isIntersecting) return; grow(e.target); io.unobserve(e.target);
-    }), { threshold: 0.15 });
-    els.forEach((el) => io.observe(el));
-  }
-}
-
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function typeInto(el, text, cps = 14) {
   el.textContent = "";
