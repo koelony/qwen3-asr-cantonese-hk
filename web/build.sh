@@ -17,7 +17,7 @@ cp -p "$ORT/ort.webgpu.min.mjs" "$ORT/ort-wasm-simd-threaded.asyncify.mjs" "$ORT
 
 out=dist
 mkdir -p "$out/ort" "$out/test/wav" "$out/fonts"
-cp -p index.html style.css app.js asr-worker.js hkasr-lib.js models.json _headers favicon.svg og-demo.png robots.txt sitemap.xml site.webmanifest "$out/"
+cp -p index.html style.css app.js cursor.js asr-worker.js hkasr-lib.js models.json _headers favicon.svg og-demo.png robots.txt sitemap.xml site.webmanifest "$out/"
 # Koelony display face and logo, same-origin because the page is cross-origin isolated (COEP)
 cp -p fonts/*.woff2 fonts/OFL.txt "$out/fonts/"
 cp -p "$ORT/ort.webgpu.min.mjs" "$ORT/ort-wasm-simd-threaded.asyncify.mjs" "$out/ort/"

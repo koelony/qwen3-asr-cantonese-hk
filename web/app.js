@@ -1,5 +1,8 @@
+import { startCursor } from "./cursor.js";
+
 const $ = (id) => document.getElementById(id);
 const worker = new Worker(new URL("./asr-worker.js", import.meta.url), { type: "module" });
+startCursor();
 let ready = false, busy = false, seq = 0;
 const qs = new URLSearchParams(location.search);
 const pending = new Map();

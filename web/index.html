@@ -137,12 +137,15 @@
     <figure class="board" aria-label="示範：模型輸出">
       <div class="board-head">
         <p class="board-label">模型寫出嚟嘅字</p>
-        <svg class="demo-koel" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
-          <g transform="scale(-1 1) translate(-512 0)">
-            <path d="M 370.830 72.241 A 207.824 207.824 0 0 1 466.722 78.843 A 115.458 115.458 0 0 0 355.298 195.238 A 256.893 256.893 0 0 1 42.812 448.283 A 248.234 248.234 0 0 0 303.338 223.095 A 427.194 427.194 0 0 1 38.073 391.298 A 326.168 326.168 0 0 1 232.425 136.963 A 92.366 92.366 0 0 0 279.815 90.889 A 57.729 57.729 0 0 1 370.830 72.241 Z" fill="currentColor"/>
-            <circle cx="345.480" cy="101.864" r="16.741" fill="var(--eye)"/>
-          </g>
-        </svg>
+        <span class="board-bird" aria-hidden="true">
+          <svg class="demo-koel" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+            <path class="b-body" d="M370.83 72.241A57.729 57.729 0 0 1 389.83 111.85A115.458 115.458 0 0 0 355.298 195.238A256.893 256.893 0 0 1 42.812 448.283A248.234 248.234 0 0 0 303.338 223.095A427.194 427.194 0 0 1 38.073 391.298A326.168 326.168 0 0 1 232.425 136.963A92.366 92.366 0 0 0 279.815 90.889A57.729 57.729 0 0 1 370.83 72.241Z" fill="currentColor"/>
+            <g class="b-head">
+              <path d="M370.83 72.241A207.824 207.824 0 0 1 466.722 78.843A115.458 115.458 0 0 0 389.83 111.85L332.2 115.14Z" fill="currentColor"/>
+              <circle class="b-eye" cx="345.48" cy="101.864" r="23.437"/>
+            </g>
+          </svg>
+        </span>
       </div>
       <div class="board-staff" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       <p class="board-text" id="heroText">今日 send 咗個 proposal 俾 client，佢話聽日再覆。</p>
@@ -152,6 +155,15 @@
 
   <!-- Demo -->
   <section class="section demo" id="demo">
+    <span class="roost-bird roost-demo" aria-hidden="true">
+      <svg viewBox="0 0 512 512" focusable="false">
+        <path d="M370.83 72.241A57.729 57.729 0 0 1 389.83 111.85A115.458 115.458 0 0 0 355.298 195.238A256.893 256.893 0 0 1 42.812 448.283A248.234 248.234 0 0 0 303.338 223.095A427.194 427.194 0 0 1 38.073 391.298A326.168 326.168 0 0 1 232.425 136.963A92.366 92.366 0 0 0 279.815 90.889A57.729 57.729 0 0 1 370.83 72.241Z" fill="currentColor"/>
+        <g class="b-head">
+          <path d="M370.83 72.241A207.824 207.824 0 0 1 466.722 78.843A115.458 115.458 0 0 0 389.83 111.85L332.2 115.14Z" fill="currentColor"/>
+          <circle class="b-eye" cx="345.48" cy="101.864" r="23.437"/>
+        </g>
+      </svg>
+    </span>
     <div class="wrap">
       <div class="section-head">
         <h2>喺瀏覽器試 0.6B</h2>
@@ -410,6 +422,15 @@
 </main>
 
 <footer class="section site-footer">
+  <span class="roost-bird roost-footer" aria-hidden="true">
+    <svg viewBox="0 0 512 512" focusable="false">
+      <path d="M370.83 72.241A57.729 57.729 0 0 1 389.83 111.85A115.458 115.458 0 0 0 355.298 195.238A256.893 256.893 0 0 1 42.812 448.283A248.234 248.234 0 0 0 303.338 223.095A427.194 427.194 0 0 1 38.073 391.298A326.168 326.168 0 0 1 232.425 136.963A92.366 92.366 0 0 0 279.815 90.889A57.729 57.729 0 0 1 370.83 72.241Z" fill="currentColor"/>
+      <g class="b-head">
+        <path d="M370.83 72.241A207.824 207.824 0 0 1 466.722 78.843A115.458 115.458 0 0 0 389.83 111.85L332.2 115.14Z" fill="currentColor"/>
+        <circle class="b-eye" cx="345.48" cy="101.864" r="23.437"/>
+      </g>
+    </svg>
+  </span>
   <div class="wrap footer-grid">
     <div class="footer-about">
       <a class="brand" href="https://koelony.com/" aria-label="Koelony 主頁">
