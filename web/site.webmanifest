@@ -1,0 +1,16 @@
+{
+  "name": "Koelony 廣東話語音轉文字 Demo",
+  "short_name": "Koelony Demo",
+  "description": "港式粵語同中英夾雜語音轉文字。Qwen3-ASR 0.6B 香港廣東話版，全程喺瀏覽器離線運行，段聲唔會上傳。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F4",
+  "theme_color": "#1C1B19",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
