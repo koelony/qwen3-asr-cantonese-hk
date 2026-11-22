@@ -63,7 +63,7 @@
   --btn-red-deeper: #8f1612;
   --on-red: #fff;
   --eye: #d0201a;
-  --err-text: #b01f1a;
+  --red-text: #b01f1a;
   --sky-bird: #6d859c;
   --ok: #1a6f40;
   --ok-soft: #e7f3ec;
@@ -96,7 +96,7 @@
     --slate-soft: #26303a;
     --on-slate: #1e1e1d;
     --logo-ink: #f4f1ea;
-    --err-text: #ec6c65;
+    --red-text: #ec6c65;
     --sky-bird: #93abc1;
     --ok: #5cbf86;
     --ok-soft: #1f2a23;
@@ -804,7 +804,7 @@ code {
 .badge.err {
   border-color: var(--eye);
   background: color-mix(in srgb, var(--eye) 10%, var(--paper));
-  color: var(--err-text);
+  color: var(--red-text);
 }
 .cap.bad {
   border-color: color-mix(in srgb, var(--warn) 45%, transparent);
