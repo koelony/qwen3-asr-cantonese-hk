@@ -83,3 +83,14 @@ jobs:
           else
             echo "::warning::smoke test could not reach the site from the runner"
           fi
+      - name: IndexNow
+        # Tells Bing and the other IndexNow engines the demo changed (key: web/<key>.txt, public by
+        # design). 200/202 = accepted. Never fails the deploy.
+        continue-on-error: true
+        run: |
+          key=ada158f6256dd401a04f722c7e948138
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "{\"host\":\"demo.koelony.com\",\"key\":\"$key\",\"keyLocation\":\"https://demo.koelony.com/$key.txt\",\"urlList\":[\"https://demo.koelony.com/\"]}")
+          echo "IndexNow: HTTP $code"
+          [ "$code" = 200 ] || [ "$code" = 202 ]

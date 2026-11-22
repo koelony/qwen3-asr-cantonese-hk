@@ -54,6 +54,13 @@ so `deploy/worker.js` serves both from this origin):
 - `/ort/*.wasm`: onnxruntime-web from jsDelivr at `ORT_VERSION` in `deploy/wrangler.jsonc`; `build.sh` fails if that
   differs from the installed onnxruntime-web.
 
+Search engines:
+- `sitemap.xml` and `robots.txt` are submitted in Google Search Console (domain property `sc-domain:koelony.com`) and
+  Bing Webmaster Tools. `BingSiteAuth.xml` is Bing's ownership file for demo.koelony.com: keep it.
+- IndexNow key: `ada158f6256dd401a04f722c7e948138.txt` (public by design). The deploy job pings IndexNow for `https://demo.koelony.com/` after
+  each production deploy and never fails the deploy on it. By hand: koelony/koelony `scripts/indexnow.sh
+  https://demo.koelony.com/` from a koelony checkout works too (same key).
+
 Notes:
 - Outside localhost the page must be served over HTTPS (WebGPU and the Cache API need a secure context).
 - Keep COOP/COEP on every response; model files must be same-origin or CORP-compatible.
