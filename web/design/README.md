@@ -1,6 +1,6 @@
 # design/ (generated, do not edit)
 
-This folder is a copy of [koelony/design](https://github.com/koelony/design) at `e6933b9b8c1d`.
+This folder is a copy of [koelony/design](https://github.com/koelony/design) at `977596b7da6d`.
 Every file here is overwritten by the next sync, so edits made here are lost.
 
 To change a token, a style or a component, change it in koelony/design. Merging there opens a

@@ -1,4 +1,4 @@
-/* generated from koelony/design@e6933b9b8c1d, do not edit. Change it in koelony/design and sync. */
+/* generated from koelony/design@977596b7da6d, do not edit. Change it in koelony/design and sync. */
 // src/lib/art.ts
 var LITTLE = {
   body: "M370.83 72.241A57.729 57.729 0 0 1 389.83 111.85A115.458 115.458 0 0 0 355.298 195.238A256.893 256.893 0 0 1 42.812 448.283A248.234 248.234 0 0 0 303.338 223.095A427.194 427.194 0 0 1 38.073 391.298A326.168 326.168 0 0 1 232.425 136.963A92.366 92.366 0 0 0 279.815 90.889A57.729 57.729 0 0 1 370.83 72.241Z",

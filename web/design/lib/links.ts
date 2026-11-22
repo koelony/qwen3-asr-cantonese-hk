@@ -1,4 +1,4 @@
-/* generated from koelony/design@e6933b9b8c1d, do not edit. Change it in koelony/design and sync. */
+/* generated from koelony/design@977596b7da6d, do not edit. Change it in koelony/design and sync. */
 /**
  * Where the Koelony sites are, and what the cross-site links are called. koelony.com serves the
  * main site and (through a service binding) the blog at /blog/; the demo is its own subdomain.

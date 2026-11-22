@@ -1,4 +1,4 @@
-/* generated from koelony/design@e6933b9b8c1d, do not edit. Change it in koelony/design and sync. */
+/* generated from koelony/design@977596b7da6d, do not edit. Change it in koelony/design and sync. */
 /** Koelony shared tokens as values, generated from tokens.json. For build scripts (OG images). */
 export const TOKENS = {
   "brand": {
