@@ -4,6 +4,7 @@
 //                  split into parts under 25 MiB, see deploy/models/README.md
 //   /ort/*.wasm    the onnxruntime-web runtime (about 28 MiB), from jsDelivr at the exact version
 //                  in ORT_VERSION (wrangler.jsonc), which build.sh checks against package-lock
+//   /blog, /blog/* 301 to the same path on koelony.com, where the blog lives
 const SEC = {
   "Cross-Origin-Opener-Policy": "same-origin",
   "Cross-Origin-Embedder-Policy": "require-corp",
@@ -19,7 +20,12 @@ const plain = (status, text) => new Response(text, { status, headers: SEC });
 
 export default {
   async fetch(req, env) {
-    const p = new URL(req.url).pathname;
+    const url = new URL(req.url);
+    const p = url.pathname;
+    // The blog lives on the main site; keep any old or guessed /blog links working.
+    if (p === "/blog" || p.startsWith("/blog/")) {
+      return Response.redirect(`https://koelony.com${p === "/blog" ? "/blog/" : p}${url.search}`, 301);
+    }
     const isModel = p.startsWith("/models/");
     const isWasm = p.startsWith("/ort/") && p.endsWith(".wasm");
     if (!isModel && !isWasm) return env.ASSETS.fetch(req);
