@@ -48,7 +48,7 @@ worker.onmessage = (e) => {
     setLoadStage("ready");
     badge("ok", "已載入 · " + be);
     $("loadMsg").textContent = `模型準備好（${m.loadSec.toFixed(1)} 秒）。後端：${be}`;
-    $("inputCard").removeAttribute("aria-disabled");
+    $("drop").removeAttribute("aria-disabled");
     step(1, "done"); step(2, "active");
     $("loadBtn").disabled = true; $("loadBtn").textContent = "模型已載入"; $("backend").disabled = true;
     const slb = $("sampleLoadBtn"); if (slb) slb.hidden = true;
@@ -160,8 +160,9 @@ async function runSampleTranscribe(url, label) {
   if (st) { st.hidden = false; st.textContent = `轉寫緊「${label}」…`; }
   const res = await fetch(url);
   const buf = await res.arrayBuffer();
-  await transcribeBuffer(buf, label);
-  if (st) st.textContent = `已完成「${label}」轉寫。`;
+  // transcribeBuffer returns nothing when it did not run (model not ready, or busy with another clip).
+  const r = await transcribeBuffer(buf, label);
+  if (st) st.textContent = r ? `已完成「${label}」轉寫。` : `轉緊另一段，等佢完咗再撳「${label}」。`;
 }
 
 for (const btn of document.querySelectorAll(".sample-btn")) {
@@ -230,7 +231,7 @@ function drawWaveBaseline() {
   if (!ctx) return;
   const w = waveCanvas.width, h = waveCanvas.height, mid = h / 2;
   const cs = getComputedStyle(document.documentElement);
-  const hair = cs.getPropertyValue("--hair").trim() || "#c9c2b6";
+  const hair = cs.getPropertyValue("--hair").trim() || "#d6d0c5";
   ctx.clearRect(0, 0, w, h);
   ctx.strokeStyle = hair;
   ctx.lineWidth = 1.5;
@@ -260,8 +261,8 @@ function startWaveMonitor(stream) {
   const render = () => {
     const w = waveCanvas.width, h = waveCanvas.height, mid = h / 2;
     const cs = getComputedStyle(document.documentElement);
-    const ink = cs.getPropertyValue("--ink").trim() || "#1c1b19";
-    const eye = cs.getPropertyValue("--eye").trim() || "#c8231d";
+    const ink = cs.getPropertyValue("--ink").trim() || "#2a2926";
+    const eye = cs.getPropertyValue("--eye").trim() || "#d0201a";
     ctx.clearRect(0, 0, w, h);
     ctx.strokeStyle = ink;
     ctx.lineWidth = 1.75;

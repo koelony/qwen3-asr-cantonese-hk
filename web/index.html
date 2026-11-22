@@ -163,7 +163,7 @@
       </div>
       <div class="board-staff" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       <p class="board-text" id="heroText">今日 send 咗個 proposal 俾 client，佢話聽日再覆。</p>
-      <figcaption class="board-foot">1.7B v2.1 FLEURS 字錯率 <b>3.89%</b>，Whisper large-v3 係 20.97% · <a href="https://koelony.com/asr/">完整數據</a></figcaption>
+      <figcaption class="board-foot">1.7B v2.1 FLEURS 字錯率 <b>3.89%</b>，Whisper large-v3 係 20.97%。<a href="https://koelony.com/asr/">完整數據</a></figcaption>
     </figure>
   </section>
 
@@ -235,8 +235,9 @@
         </div>
 
         <!-- step 2 -->
-        <div class="panel panel-input" id="inputCard" aria-disabled="true">
-          <div class="drop" id="drop">
+        <div class="panel panel-input" id="inputCard">
+          <!-- Only the mic and file drop wait for the model; the sample clips below stay usable (they offer to load it). -->
+          <div class="drop" id="drop" aria-disabled="true">
             <button id="recBtn" class="mic" type="button" aria-label="錄音">
               <span class="mic-ring" aria-hidden="true"></span>
               <svg class="mic-ico" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/></svg>
@@ -252,23 +253,24 @@
 
           <div class="samples-box">
             <div class="samples-head">
-              <span class="samples-title">免開咪 · 港式範例音頻</span>
+              <span class="samples-title">免開咪試：範例音頻</span>
               <span class="samples-note">即撳即播，模型就緒可直接轉寫</span>
             </div>
             <div class="sample-btns">
-              <button type="button" class="sample-btn" data-sample="test/wav/08.wav" data-label="範例 1 · 島嶼與度假村">
+              <button type="button" class="sample-btn" data-sample="test/wav/08.wav" data-label="範例 1：島嶼與度假村">
                 <span class="sample-ico" aria-hidden="true">▶</span>
-                <span>範例 1 · 島嶼與度假村</span>
+                <span>範例 1：島嶼與度假村</span>
               </button>
-              <button type="button" class="sample-btn" data-sample="test/wav/14.wav" data-label="範例 2 · 組織創新">
+              <button type="button" class="sample-btn" data-sample="test/wav/14.wav" data-label="範例 2：組織創新">
                 <span class="sample-ico" aria-hidden="true">▶</span>
-                <span>範例 2 · 組織創新</span>
+                <span>範例 2：組織創新</span>
               </button>
-              <button type="button" class="sample-btn" data-sample="test/wav/19.wav" data-label="範例 3 · 城市風格">
+              <button type="button" class="sample-btn" data-sample="test/wav/19.wav" data-label="範例 3：城市風格">
                 <span class="sample-ico" aria-hidden="true">▶</span>
-                <span>範例 3 · 城市風格</span>
+                <span>範例 3：城市風格</span>
               </button>
             </div>
+            <p class="hint samples-credit">範例音頻嚟自 Google <a href="https://huggingface.co/datasets/google/fleurs" rel="noopener">FLEURS</a> 粵語測試集，以 <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a> 授權。</p>
             <div class="sample-status-row">
               <p class="hint" id="sampleStatus" hidden></p>
               <button type="button" class="btn btn-line btn-small" id="sampleLoadBtn" hidden>載入模型並轉寫呢段</button>
@@ -343,7 +345,7 @@
       <dl class="pillars">
         <div class="pillar"><dt>繁體口語照寫</dt><dd>係、喺、嘅、咗、㗎，講乜出乜，唔會變簡體或書面語。</dd></div>
         <div class="pillar"><dt>中英夾雜</dt><dd>book 枱、send email、deadline 照寫英文，1.7B 錯字率由 11.74% 降到 5.52%。</dd></div>
-        <div class="pillar"><dt>香港口音同指令</dt><dd>支援短語音指令同 hotwords，唔會亂照抄提示詞。</dd></div>
+        <div class="pillar"><dt>香港口音同指令</dt><dd>短語音指令都聽得明。</dd></div>
         <div class="pillar"><dt>純瀏覽器離線</dt><dd>載入後斷網照跑，錄音唔離開你部機，零追蹤零收集。</dd></div>
       </dl>
     </div>
@@ -360,7 +362,7 @@
       <div class="dual-cards">
         <article class="dcard dcard-17b" id="more-17b">
           <div class="dcard-top">
-            <span class="dcard-badge">桌面與伺服器 · Apache-2.0</span>
+            <span class="dcard-badge">桌面同伺服器（Apache-2.0）</span>
             <h3>Qwen3-ASR 1.7B v2.1</h3>
             <p>體積約三倍，香港測試集字錯率低兩至三成，支援 BF16、GGUF（Q4_K_M / Q6_K / Q6_K_H / Q8_0）、FP8 同 NVFP4。</p>
           </div>
@@ -377,7 +379,7 @@
 
         <article class="dcard dcard-ora" id="more-oratype">
           <div class="dcard-top">
-            <span class="dcard-badge">macOS 語音輸入 · MIT 開源</span>
+            <span class="dcard-badge">macOS 語音輸入（MIT 開源）</span>
             <h3>OraType for Mac</h3>
             <p>喺任何 app 撳快捷鍵講嘢即打字，內置 <b>1.7B（GGUF Q6_K_H）</b>，自動刪贅字、加標點同即講即譯，免費離線。</p>
           </div>

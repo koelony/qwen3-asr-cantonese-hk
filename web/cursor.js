@@ -76,7 +76,7 @@ export function startCursor() {
   root.classList.add("has-cursor");
 
   const ctx = trail.getContext("2d");
-  const readEye = () => getComputedStyle(root).getPropertyValue("--eye").trim() || "#c8231d";
+  const readEye = () => getComputedStyle(root).getPropertyValue("--eye").trim() || "#d0201a";
   let trailColor = readEye();
   const schemeQuery = matchMedia("(prefers-color-scheme: dark)");
   const onScheme = () => {

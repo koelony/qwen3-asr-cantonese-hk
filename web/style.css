@@ -36,24 +36,38 @@
 }
 
 :root {
+  /*
+   * Koelony shared colour tokens v1: identical in koelony.com, demo.koelony.com and the blog.
+   * Contrast on --paper (WCAG): ink 13.7, ink-2 (body) 9.9, soft 6.0, mid 4.9, slate 6.7,
+   * line (meaningful borders) 3.4. Brand colours (koelony brand/colors.json): ink #0c0c0c for the
+   * logo, paper #f4f1ea (= --surface), red #d0201a for the button in both themes (white label 5.4)
+   * and the eye. Dark mode shows the inverse lockup: brand paper with the red eye.
+   */
   --paper: #faf8f4;
   --surface: #f4f1ea;
   --surface-2: #eae6dc;
-  --ink: #1c1b19;
-  --ink-2: #36383d;
-  --soft: #66645e;
-  --mid: #75726b;
-  --hair: #c9c2b6;
-  --rule: #dfd9ce;
+  --ink: #2a2926;
+  --ink-2: #3d3f44;
+  --soft: #625f59;
+  --mid: #6f6c65;
+  --hair: #d6d0c5;
+  --line: #8c877d;
+  --rule: #e2dcd2;
   --slate: #3b5b78;
   --slate-deep: #2b455d;
   --slate-soft: #e9f0f6;
   --on-slate: #faf8f4;
+  --logo-ink: #0c0c0c;
+  --btn-red: #d0201a;
+  --btn-red-deep: #b01b16;
+  --btn-red-deeper: #8f1612;
+  --on-red: #fff;
+  --eye: #d0201a;
+  --err-text: #b01f1a;
   --sky-bird: #6d859c;
-  --eye: #c8231d;
-  --ok: #1d7a46;
+  --ok: #1a6f40;
   --ok-soft: #e7f3ec;
-  --warn: #a85b10;
+  --warn: #9a520c;
   --warn-soft: #fbf1e4;
   --display:
     "Chiron GoRound TC", "PingFang HK", "Noto Sans HK", "Microsoft JhengHei", system-ui, sans-serif;
@@ -64,27 +78,30 @@
   --staff-h: clamp(30px, 20px + 2vw, 44px);
   color-scheme: light;
 }
+/* Dark: soft warm charcoal, off-white text, desaturated slate. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #121417;
-    --surface: #1a1d22;
-    --surface-2: #22262d;
-    --ink: #edeae4;
-    --ink-2: #c2c5cc;
-    --soft: #8f939c;
-    --mid: #7d828c;
-    --hair: #3f4550;
-    --rule: #2b2f37;
-    --slate: #7da2c4;
-    --slate-deep: #9bc0e2;
-    --slate-soft: #1b2734;
-    --on-slate: #121417;
-    --sky-bird: #7da2c4;
-    --eye: #e04a43;
-    --ok: #46b877;
-    --ok-soft: #162920;
+    --paper: #1e1e1d;
+    --surface: #262625;
+    --surface-2: #2e2e2c;
+    --ink: #e6e2da;
+    --ink-2: #c2beb6;
+    --soft: #a19d95;
+    --mid: #938f88;
+    --hair: #3a3936;
+    --line: #77756f;
+    --rule: #2f2f2d;
+    --slate: #93abc1;
+    --slate-deep: #b3c7d9;
+    --slate-soft: #26303a;
+    --on-slate: #1e1e1d;
+    --logo-ink: #f4f1ea;
+    --err-text: #ec6c65;
+    --sky-bird: #93abc1;
+    --ok: #5cbf86;
+    --ok-soft: #1f2a23;
     --warn: #e09b4b;
-    --warn-soft: #2c2115;
+    --warn-soft: #2c241b;
     color-scheme: dark;
   }
 }
@@ -219,8 +236,7 @@ code {
   top: 0;
   z-index: 50;
   border-bottom: 1px solid var(--hair);
-  background: color-mix(in srgb, var(--paper) 94%, transparent);
-  backdrop-filter: blur(8px);
+  background: var(--paper);
 }
 .header-row {
   display: flex;
@@ -231,7 +247,7 @@ code {
 }
 .brand {
   display: inline-flex;
-  color: var(--ink);
+  color: var(--logo-ink);
   text-decoration: none;
 }
 .logo {
@@ -302,18 +318,18 @@ code {
   color: var(--on-slate);
 }
 .btn-solid {
-  border-color: var(--eye);
-  background: var(--eye);
-  color: #fff;
+  border-color: var(--btn-red);
+  background: var(--btn-red);
+  color: var(--on-red);
 }
 .btn-solid:hover {
-  border-color: color-mix(in srgb, var(--eye) 82%, #000);
-  background: color-mix(in srgb, var(--eye) 82%, #000);
-  color: #fff;
+  border-color: var(--btn-red-deep);
+  background: var(--btn-red-deep);
+  color: var(--on-red);
 }
 .btn-solid:active {
-  border-color: color-mix(in srgb, var(--eye) 66%, #000);
-  background: color-mix(in srgb, var(--eye) 66%, #000);
+  border-color: var(--btn-red-deeper);
+  background: var(--btn-red-deeper);
 }
 .btn:disabled,
 .btn:disabled:hover {
@@ -400,19 +416,11 @@ code {
   gap: 8px;
 }
 .hpill {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 12px;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--ink-2);
-  font-size: 0.8125rem;
+  color: var(--soft);
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .hpill.slate {
-  border-color: color-mix(in srgb, var(--slate) 30%, transparent);
-  background: var(--slate-soft);
   color: var(--slate-deep);
 }
 @media (min-width: 960px) {
@@ -744,9 +752,12 @@ code {
   transition: opacity 0.25s;
 }
 /* Only lock mic/file drop zone until model is loaded; sample audio buttons stay playable. */
-.panel[aria-disabled="true"] .drop {
-  opacity: 0.56;
+/* Until the model is loaded the mic and file picker are inactive (dimmed); the format hint stays readable. */
+.drop[aria-disabled="true"] {
   pointer-events: none;
+}
+.drop[aria-disabled="true"] > :not(.hint) {
+  opacity: 0.56;
 }
 .panel > h3 {
   margin-bottom: 12px;
@@ -793,7 +804,7 @@ code {
 .badge.err {
   border-color: var(--eye);
   background: color-mix(in srgb, var(--eye) 10%, var(--paper));
-  color: var(--eye);
+  color: var(--err-text);
 }
 .cap.bad {
   border-color: color-mix(in srgb, var(--warn) 45%, transparent);
@@ -980,8 +991,8 @@ select:disabled {
   transition: background-color 0.18s;
 }
 .mic.rec {
-  background: var(--eye);
-  color: #fff;
+  background: var(--btn-red);
+  color: var(--on-red);
 }
 .mic .stop-ico {
   display: none;
@@ -1365,14 +1376,10 @@ td.diff {
   border-color: color-mix(in srgb, var(--slate) 45%, var(--rule));
 }
 .dcard-badge {
-  display: inline-block;
+  display: block;
   margin-bottom: 10px;
-  padding: 3px 11px;
-  border: 1px solid color-mix(in srgb, var(--slate) 28%, transparent);
-  border-radius: 999px;
-  background: var(--slate-soft);
-  color: var(--slate-deep);
-  font-size: 0.78rem;
+  color: var(--soft);
+  font-size: 0.875rem;
   font-weight: 700;
 }
 .dcard-top h3 {
