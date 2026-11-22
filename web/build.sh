@@ -17,7 +17,7 @@ cp -p "$ORT/ort.webgpu.min.mjs" "$ORT/ort-wasm-simd-threaded.asyncify.mjs" "$ORT
 
 out=dist
 mkdir -p "$out/ort" "$out/test/wav" "$out/fonts"
-cp -p index.html style.css app.js cursor.js asr-worker.js hkasr-lib.js models.json _headers favicon.svg favicon.ico favicon-32.png apple-touch-icon.png icon-192.png icon-512.png og-demo.png robots.txt sitemap.xml site.webmanifest "$out/"
+cp -p index.html style.css app.js cursor.js asr-worker.js hkasr-lib.js models.json _headers favicon.svg favicon.ico favicon-32.png apple-touch-icon.png icon-192.png icon-512.png og-demo.png robots.txt sitemap.xml site.webmanifest BingSiteAuth.xml ada158f6256dd401a04f722c7e948138.txt "$out/"
 # Koelony display face and logo, same-origin because the page is cross-origin isolated (COEP)
 cp -p fonts/*.woff2 fonts/OFL.txt "$out/fonts/"
 cp -p "$ORT/ort.webgpu.min.mjs" "$ORT/ort-wasm-simd-threaded.asyncify.mjs" "$out/ort/"
