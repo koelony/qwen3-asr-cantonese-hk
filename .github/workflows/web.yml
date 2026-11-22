@@ -1,5 +1,8 @@
 name: web
 
+# Checks web/ only. Nothing here deploys: demo.koelony.com is built from koelony/demo-site (private)
+# since 2026-11-22, and web/ is kept for reference until the model team removes it.
+
 on:
   pull_request:
     paths: ["web/**", ".github/workflows/web.yml"]
@@ -45,52 +48,3 @@ jobs:
           name: dist
           path: web/dist
           retention-days: 7
-
-  deploy:
-    needs: check
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    environment:
-      name: production
-      url: https://demo.koelony.com
-    concurrency:
-      group: deploy-production
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: web/dist
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: wrangler deploy
-        working-directory: web/deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx --yes wrangler@4.151.2 deploy -c wrangler.jsonc
-      - name: Smoke test
-        # Cloudflare bot protection may challenge runner IPs; a 403 here is only a warning.
-        run: |
-          sleep 5
-          h=$(curl -sI -A koelony-demo-ci https://demo.koelony.com/)
-          echo "$h" | head -1
-          if echo "$h" | head -1 | grep -q " 200"; then
-            echo "$h" | grep -qi "cross-origin-embedder-policy: require-corp" || { echo "COEP header missing"; exit 1; }
-          else
-            echo "::warning::smoke test could not reach the site from the runner"
-          fi
-      - name: IndexNow
-        # Tells Bing and the other IndexNow engines the demo changed (key: web/<key>.txt, public by
-        # design). 200/202 = accepted. Never fails the deploy.
-        continue-on-error: true
-        run: |
-          key=ada158f6256dd401a04f722c7e948138
-          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
-            -H 'Content-Type: application/json; charset=utf-8' \
-            --data "{\"host\":\"demo.koelony.com\",\"key\":\"$key\",\"keyLocation\":\"https://demo.koelony.com/$key.txt\",\"urlList\":[\"https://demo.koelony.com/\"]}")
-          echo "IndexNow: HTTP $code"
-          [ "$code" = 200 ] || [ "$code" = 202 ]

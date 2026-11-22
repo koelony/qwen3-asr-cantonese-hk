@@ -29,7 +29,9 @@ Part of [Koelony](https://koelony.com), open-source models for Hong Kong Cantone
 
 **[demo.koelony.com](https://demo.koelony.com)** runs the 0.6B model (int8 ONNX, about 1.16 GB, cached after the
 first load) entirely in the browser with WebGPU, falling back to WASM. Pick or drop an audio file, or record from the
-microphone; no audio leaves the device. Source, local dev server and deploy setup are in [`web/`](web/README.md).
+microphone; no audio leaves the device.
+
+> The demo at demo.koelony.com is built from koelony/demo-site (private) since 2026-11-22; web/ here is kept for reference and will be removed by the model team.
 
 ## Available weights & quantizations
 

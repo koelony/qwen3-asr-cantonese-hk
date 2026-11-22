@@ -1,5 +1,7 @@
 # Web demo: Cantonese ASR in the browser
 
+> The demo at demo.koelony.com is built from koelony/demo-site (private) since 2026-11-22; web/ here is kept for reference and will be removed by the model team.
+
 Live: https://demo.koelony.com
 
 Runs [koelony/Qwen3-ASR-0.6B-Cantonese-HK](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK) fully in the browser
@@ -42,10 +44,8 @@ node test/node_libtest.mjs     # expect: mel maxdiff ~2e-5, tokenizer decode mat
 ## CI / deploy
 
 `.github/workflows/web.yml`: every PR and push that touches `web/` runs `npm ci`, `build.sh`, `node --check` and the Node test.
-A push to `main` then deploys `dist/` + `deploy/worker.js` to **demo.koelony.com** (Worker `koelony-demo` on
-Koelony's Cloudflare account) with `wrangler deploy -c deploy/wrangler.jsonc`. The deploy job uses the `production`
-environment, so it waits for a maintainer to approve it; its `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` are
-Koelony's.
+It no longer deploys: the old deploy job and its Cloudflare secrets were removed when koelony/demo-site took over
+demo.koelony.com (Worker `koelony-demo`). What follows describes how the old setup worked.
 
 Where the big files come from (Workers static assets allow 25 MiB a file, and the page must stay cross-origin isolated,
 so `deploy/worker.js` serves both from this origin):
