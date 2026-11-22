@@ -1,0 +1,126 @@
+/* generated from koelony/design@e6933b9b8c1d, do not edit. Change it in koelony/design and sync. */
+/*
+ * ---------- The Little Koel cursor (cursor.js) ----------
+ * The one red koel on the page (every other bird is ink), with a white eye and a thin outline in the
+ * paper colour, so it is never mistaken for one of the birds around it. Over a red button it turns
+ * white with a red eye.
+ */
+.cb,
+.cur-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+.cur-trail {
+  width: 100vw;
+  height: 100vh;
+}
+.cb {
+  width: var(--cb, 46px);
+  height: var(--cb, 46px);
+  opacity: 0;
+  will-change: transform;
+}
+.cb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 70% 80%;
+  transition: transform 0.16s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.cb-body {
+  fill: var(--eye);
+}
+.cb-body svg path {
+  stroke: var(--paper);
+  stroke-width: 26px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+.cb-eye {
+  fill: #fff;
+}
+.cursor-solid .cb-body {
+  fill: #fff;
+}
+.cursor-solid .cb-body svg path {
+  stroke: var(--eye);
+}
+.cursor-solid .cb-eye {
+  fill: var(--eye);
+}
+.cursor-in .cb {
+  opacity: 1;
+}
+.cb .cb-fly,
+.cb[data-pose="fly"] .cb-perch {
+  display: none;
+}
+.cb[data-pose="fly"] .cb-fly {
+  display: inline;
+}
+/* The head (beak and eye) turns about the centre of the round head: LITTLE.pivot in art.ts. */
+.cb-head {
+  transform-box: view-box;
+  transform-origin: 332.2px 115.14px;
+}
+.cb-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cb-blink 4.6s infinite;
+}
+/* The wings flap about FLYING.shoulder in art.ts. */
+.cb-wing {
+  transform-box: view-box;
+  transform-origin: 268px 208px;
+}
+.cb[data-pose="fly"] .cb-wing {
+  animation: cb-flap 0.24s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+}
+.cb[data-pose="fly"] .cb-wing-far {
+  animation-delay: -0.05s;
+}
+/* Reaching something clickable, it pecks twice. */
+.cursor-link .cb-head {
+  animation: cb-peck 0.5s ease-in-out;
+}
+/* A click is a little hop: squashed while pressed, springing back on release. */
+.cursor-down .cb svg {
+  transform: translateY(2px) scale(1.12, 0.84);
+}
+/* The system cursor goes only once ours is on screen, so there is never no cursor at all. */
+html.has-cursor.cursor-in,
+html.has-cursor.cursor-in * {
+  cursor: none;
+}
+@keyframes cb-flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.82);
+  }
+}
+@keyframes cb-peck {
+  20%,
+  60% {
+    transform: rotate(26deg);
+  }
+  40%,
+  80% {
+    transform: rotate(4deg);
+  }
+}
+@keyframes cb-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}

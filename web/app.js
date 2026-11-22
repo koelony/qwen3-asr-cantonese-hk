@@ -1,8 +1,10 @@
-import { startCursor } from "./cursor.js";
+import { mountCursor } from "./design/cursor.js";
 
 const $ = (id) => document.getElementById(id);
 const worker = new Worker(new URL("./asr-worker.js", import.meta.url), { type: "module" });
-startCursor();
+// The shared koel pointer (design/cursor.js): mouse only, follows reduced motion live, and white over
+// the red buttons, the record button included.
+mountCursor({ solid: ".btn-solid, .mic.rec" });
 let ready = false, busy = false, seq = 0;
 const qs = new URLSearchParams(location.search);
 const pending = new Map();

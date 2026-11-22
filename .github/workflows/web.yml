@@ -28,7 +28,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: ./build.sh
       - name: Syntax check
-        run: for f in app.js asr-worker.js hkasr-lib.js deploy/worker.js test/node_libtest.mjs; do node --check "$f"; done
+        run: for f in app.js asr-worker.js hkasr-lib.js design/cursor.js deploy/worker.js test/node_libtest.mjs; do node --check "$f"; done
       - name: Node test (log-mel, tokenizer decode, chunking)
         run: |
           curl -sfL --retry 3 -o test/model-small/vocab.json \

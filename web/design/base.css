@@ -1,0 +1,88 @@
+/* generated from koelony/design@e6933b9b8c1d, do not edit. Change it in koelony/design and sync. */
+/*
+ * Koelony base: the craft floor every Koelony page shares. Load after tokens.css and before the
+ * site's own styles, so a site can still override any of it.
+ *
+ * Only rules that are live and identical on koelony.com, demo.koelony.com and koelony.com/blog are
+ * here. Body type (size and line height), link colours and the scrollbar differ per site and stay
+ * in each site's CSS.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  caret-color: var(--eye);
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink-2);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Selection and focus: Harbour Slate, the same in every site. */
+::selection {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+:focus-visible {
+  outline: 3px solid var(--slate);
+  outline-offset: 3px;
+}
+
+/* Links: a thin underline, set off the baseline, that thickens on hover. Colour is the site's call. */
+a {
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.22em;
+}
+a:hover {
+  text-decoration-thickness: 0.16em;
+}
+
+/* Headings are set in the display face, in heading ink. Sizes are the site's call. */
+h1,
+h2,
+h3 {
+  color: var(--ink);
+  font-family: var(--display);
+  text-wrap: balance;
+}
+
+/* Numbers that line up: dates and figures. Tables set tabular numerals themselves. */
+time,
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Layout primitives. */
+.wrap {
+  width: min(100% - 2 * var(--gutter), 1160px);
+  margin-inline: auto;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * Reduced motion. Nothing here moves by default; each animated part (the cursor koel, the flock,
+ * the perched koels) checks prefers-reduced-motion itself. This only turns off what a site may
+ * have switched on globally.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .btn {
+    transition: none;
+  }
+}

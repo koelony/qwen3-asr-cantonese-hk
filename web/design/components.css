@@ -1,0 +1,527 @@
+/* generated from koelony/design@e6933b9b8c1d, do not edit. Change it in koelony/design and sync. */
+/*
+ * Koelony components: the parts koelony.com, the blog and the demo share. Plain class names, no
+ * framework, so the plain-HTML demo can use them as well as the React sites (react/*.tsx renders
+ * exactly this markup). Load after base.css and before the site's own styles.
+ *
+ * Every rule here was extracted from what is live on the sites. A site keeps its own differences
+ * (gaps, transitions, placement) in its own CSS, after this file.
+ */
+
+/* ---------- Skip link ---------- */
+.skip-link {
+  position: absolute;
+  top: -80px;
+  left: var(--gutter);
+  z-index: 100;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* ---------- Header: pinned, ruled off by a hairline (SiteHeader) ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--hair);
+  background: var(--paper);
+}
+/* Reading progress: the header's own rule, inked from the left. Set --read (0 to 1) or a transform. */
+.read-progress {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  background: var(--slate);
+  transform: scaleX(var(--read, 0));
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+.header-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 28px;
+  padding-block: 10px;
+}
+.brand {
+  display: inline-flex;
+  color: var(--logo-ink);
+  text-decoration: none;
+}
+.logo {
+  display: inline-flex;
+  color: var(--logo-ink);
+}
+.logo svg {
+  width: auto;
+  height: 100%;
+}
+/* On a phone the menu is a second row under the logo; from 760px it sits on the right. */
+.nav {
+  display: flex;
+  order: 3;
+  flex-basis: 100%;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-top: 8px;
+  font-size: 0.9375rem;
+}
+.nav a {
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.16s;
+}
+.nav a:hover,
+.nav a[aria-current] {
+  color: var(--slate);
+  text-decoration: underline;
+}
+
+/* ---------- Language toggle: the other language, named in that language ---------- */
+.lang {
+  margin-left: auto;
+  padding: 5px 14px;
+  border: 1.5px solid var(--slate);
+  border-radius: 999px;
+  color: var(--slate-deep);
+  font: 700 0.9375rem / 1.3 var(--display);
+  text-decoration: none;
+}
+.lang:hover {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+@media (min-width: 760px) {
+  .header-row {
+    flex-wrap: nowrap;
+    height: 64px;
+    padding-block: 0;
+  }
+  .nav {
+    order: 0;
+    flex-basis: auto;
+    justify-content: flex-start;
+    gap: 26px;
+    margin-left: auto;
+    padding-top: 0;
+  }
+  .lang {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Buttons ---------- */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7em 1.35em;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font: 700 1rem / 1.3 var(--display);
+  text-decoration: none;
+}
+/* The quiet action: a Harbour Slate outline that fills on hover. */
+.btn-line {
+  border-color: var(--slate);
+  color: var(--slate-deep);
+}
+.btn-line:active {
+  background: var(--paper);
+  color: var(--slate-deep);
+}
+.btn-line:hover {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+/*
+ * The one primary action per section: Koel Red with a white label in both themes. White on #d0201a
+ * is 5.4:1; a lighter red for dark mode would drop the label under 4.5:1, so the red stays.
+ */
+.btn-solid {
+  border-color: var(--btn-red);
+  background: var(--btn-red);
+  color: var(--on-red);
+}
+.btn-solid:hover {
+  border-color: var(--btn-red-deep);
+  background: var(--btn-red-deep);
+  color: var(--on-red);
+}
+.btn-solid:active {
+  border-color: var(--btn-red-deeper);
+  background: var(--btn-red-deeper);
+}
+
+/* ---------- Footer (SiteFooter) ---------- */
+.footer-grid {
+  display: grid;
+}
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 10px 48px;
+  align-content: start;
+}
+.footer-fine {
+  color: var(--soft);
+  font-size: 0.875rem;
+}
+:where(ul).footer-fine {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 760px) {
+  .footer-grid {
+    grid-template-columns: 1fr auto;
+  }
+  .footer-fine {
+    grid-column: 1 / -1;
+  }
+}
+
+/*
+ * ---------- The Little Koel cursor (cursor.js) ----------
+ * The one red koel on the page (every other bird is ink), with a white eye and a thin outline in the
+ * paper colour, so it is never mistaken for one of the birds around it. Over a red button it turns
+ * white with a red eye.
+ */
+.cb,
+.cur-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+.cur-trail {
+  width: 100vw;
+  height: 100vh;
+}
+.cb {
+  width: var(--cb, 46px);
+  height: var(--cb, 46px);
+  opacity: 0;
+  will-change: transform;
+}
+.cb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 70% 80%;
+  transition: transform 0.16s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.cb-body {
+  fill: var(--eye);
+}
+.cb-body svg path {
+  stroke: var(--paper);
+  stroke-width: 26px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+.cb-eye {
+  fill: #fff;
+}
+.cursor-solid .cb-body {
+  fill: #fff;
+}
+.cursor-solid .cb-body svg path {
+  stroke: var(--eye);
+}
+.cursor-solid .cb-eye {
+  fill: var(--eye);
+}
+.cursor-in .cb {
+  opacity: 1;
+}
+.cb .cb-fly,
+.cb[data-pose="fly"] .cb-perch {
+  display: none;
+}
+.cb[data-pose="fly"] .cb-fly {
+  display: inline;
+}
+/* The head (beak and eye) turns about the centre of the round head: LITTLE.pivot in art.ts. */
+.cb-head {
+  transform-box: view-box;
+  transform-origin: 332.2px 115.14px;
+}
+.cb-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cb-blink 4.6s infinite;
+}
+/* The wings flap about FLYING.shoulder in art.ts. */
+.cb-wing {
+  transform-box: view-box;
+  transform-origin: 268px 208px;
+}
+.cb[data-pose="fly"] .cb-wing {
+  animation: cb-flap 0.24s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+}
+.cb[data-pose="fly"] .cb-wing-far {
+  animation-delay: -0.05s;
+}
+/* Reaching something clickable, it pecks twice. */
+.cursor-link .cb-head {
+  animation: cb-peck 0.5s ease-in-out;
+}
+/* A click is a little hop: squashed while pressed, springing back on release. */
+.cursor-down .cb svg {
+  transform: translateY(2px) scale(1.12, 0.84);
+}
+/* The system cursor goes only once ours is on screen, so there is never no cursor at all. */
+html.has-cursor.cursor-in,
+html.has-cursor.cursor-in * {
+  cursor: none;
+}
+@keyframes cb-flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.82);
+  }
+}
+@keyframes cb-peck {
+  20%,
+  60% {
+    transform: rotate(26deg);
+  }
+  40%,
+  80% {
+    transform: rotate(4deg);
+  }
+}
+@keyframes cb-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+/*
+ * ---------- Perched koel (PerchedKoel) ----------
+ * A little ink koel standing on a structural rule (header, footer, a call to action), never over
+ * prose. Place it with a class of your own: top on the rule, margin-top: calc(var(--pb) * -0.645)
+ * puts its feet on it. It breathes and blinks only with motion allowed.
+ */
+.pkoel {
+  --pb: 44px;
+  position: absolute;
+  z-index: 4;
+  width: var(--pb);
+  height: var(--pb);
+  color: var(--ink);
+  transform-origin: 50% 64.5%;
+  pointer-events: none;
+}
+.pkoel svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 62.1% 64.5%;
+}
+.pkoel[data-face="-1"] svg {
+  scale: -1 1;
+}
+.pkoel .b-head {
+  transform-box: view-box;
+  transform-origin: 332.2px 115.14px;
+}
+.pkoel .b-eye {
+  fill: var(--eye);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pkoel {
+    animation: koel-breathe 2.6s ease-in-out infinite;
+  }
+  .pkoel .b-eye {
+    animation: cb-blink 4.8s infinite;
+  }
+}
+@keyframes koel-breathe {
+  0%,
+  100% {
+    scale: 1 1;
+  }
+  50% {
+    scale: 1.035 0.955;
+  }
+}
+@keyframes koel-tilt {
+  0%,
+  36%,
+  64%,
+  100% {
+    rotate: 0deg;
+  }
+  42%,
+  58% {
+    rotate: 10deg;
+  }
+}
+
+/*
+ * ---------- Ink-wash background flock (BackgroundFlock) ----------
+ * Five faint koels crossing behind the page (z-index 0; give the page content z-index 1). They are
+ * never over controls, take no pointer events, and are hidden with reduced motion.
+ */
+.bg-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--sky-bird);
+}
+.sky-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.sky-bird {
+  position: absolute;
+  top: 13%;
+  left: 0;
+  width: 42px;
+  height: 42px;
+  opacity: 0.14;
+  transform: translate3d(-8vw, 0, 0);
+  will-change: transform;
+}
+.sky-bird svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: currentColor;
+}
+.sky-wing {
+  transform-box: view-box;
+  transform-origin: 268px 208px;
+}
+.sky-b1 {
+  top: 13%;
+  width: 42px;
+  opacity: 0.15;
+  --dur: 32s;
+  --del: -24.5s;
+  --flap: 0.44s;
+}
+.sky-b2 {
+  top: 17%;
+  width: 28px;
+  opacity: 0.1;
+  --dur: 44s;
+  --del: -31.5s;
+  --flap: 0.52s;
+}
+.sky-b3 {
+  top: 33%;
+  width: 46px;
+  opacity: 0.16;
+  --dur: 28s;
+  --del: -4.2s;
+  --flap: 0.4s;
+}
+.sky-b4 {
+  top: 59%;
+  width: 36px;
+  opacity: 0.13;
+  --dur: 38s;
+  --del: -30.5s;
+  --flap: 0.48s;
+}
+.sky-b5 {
+  top: 78%;
+  width: 30px;
+  opacity: 0.11;
+  --dur: 46s;
+  --del: -7.5s;
+  --flap: 0.54s;
+}
+@media (prefers-color-scheme: dark) {
+  .sky-b1 {
+    opacity: 0.14;
+  }
+  .sky-b2 {
+    opacity: 0.1;
+  }
+  .sky-b3 {
+    opacity: 0.15;
+  }
+  .sky-b4 {
+    opacity: 0.12;
+  }
+  .sky-b5 {
+    opacity: 0.1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sky-bird {
+    animation: sky-glide var(--dur, 36s) linear var(--del, 0s) infinite;
+  }
+  .sky-bird svg {
+    animation: sky-bob 5.5s ease-in-out var(--del, 0s) infinite;
+  }
+  .sky-wing {
+    animation: sky-flap var(--flap, 0.46s) cubic-bezier(0.4, 0, 0.6, 1) var(--del, 0s) infinite
+      alternate;
+  }
+  .sky-wing-far {
+    animation-delay: calc(var(--del, 0s) - 0.08s);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-sky {
+    opacity: 0;
+  }
+}
+@keyframes sky-glide {
+  from {
+    transform: translate3d(-8vw, 0, 0);
+  }
+  to {
+    transform: translate3d(108vw, -28px, 0);
+  }
+}
+@keyframes sky-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes sky-flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.78);
+  }
+}
