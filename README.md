@@ -38,11 +38,11 @@ microphone; no audio leaves the device.
 | Hugging Face repo | Format | Size | Runtime / target |
 |---|---|---:|---|
 | [`koelony/Qwen3-ASR-1.7B-Cantonese-HK`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK) | BF16 (`safetensors`) + `comfyui/` single-file | 4.08 GB | `transformers`, `qwen-asr`, vLLM, [ComfyUI-Drama3](https://github.com/PedroMarinhoDev/ComfyUI-Drama3) |
-| [`koelony/Qwen3-ASR-1.7B-Cantonese-HK-GGUF`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK-GGUF) | GGUF `Q4_K_M` / `Q6_K` / `Q6_K_H` / `Q8_0` + `mmproj-Q8_0`, plus [`transcribe-cpp/`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK-GGUF/tree/main/transcribe-cpp) single-file GGUF | 1.1–1.8 GB + 356 MB (`transcribe-cpp/`: 1.3–2.2 GB) | `llama.cpp` (`llama-server`), [OraType](https://github.com/sennett-lau/oratype), [`transcribe.cpp`](https://github.com/handy-computer/transcribe.cpp), [Hex](https://github.com/anomalyco/hex) (macOS) |
+| [`koelony/Qwen3-ASR-1.7B-Cantonese-HK-GGUF`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK-GGUF) | GGUF `Q4_K_M` / `Q6_K` / `Q6_K_H` / `Q8_0` + `mmproj-Q8_0`, plus [`transcribe-cpp/`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK-GGUF/tree/main/transcribe-cpp) single-file GGUF | 1.1–1.8 GB + 356 MB (`transcribe-cpp/`: 1.3–2.2 GB) | `llama.cpp` (`llama-server`), [OraType](https://github.com/sennett-lau/oratype); also compatible with [`transcribe.cpp`](https://github.com/handy-computer/transcribe.cpp) / [Hex](https://github.com/anomalyco/hex) (macOS) |
 | [`koelony/Qwen3-ASR-1.7B-Cantonese-HK-FP8`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK-FP8) | FP8 W8A8 (`compressed-tensors`) | 2.67 GB | vLLM (`FP8_DYNAMIC`, larger KV-cache headroom) |
 | [`koelony/Qwen3-ASR-1.7B-Cantonese-HK-NVFP4`](https://huggingface.co/koelony/Qwen3-ASR-1.7B-Cantonese-HK-NVFP4) | NVFP4A16 (`compressed-tensors`) | 2.05 GB | vLLM (fastest GPU throughput, smallest VRAM) |
 | [`koelony/Qwen3-ASR-0.6B-Cantonese-HK`](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK) | 0.6B BF16 (`safetensors`) | 1.56 GB | `transformers`, `qwen-asr`, vLLM |
-| [`koelony/Qwen3-ASR-0.6B-Cantonese-HK-GGUF`](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK-GGUF) | 0.6B GGUF `Q4_K_M` / `Q6_K` / `Q8_0` + `mmproj-Q8_0`, plus [`transcribe-cpp/`](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK-GGUF/tree/main/transcribe-cpp) single-file GGUF | 397–639 MB + 214 MB (`transcribe-cpp/`: 590–850 MB) | `llama.cpp` (`llama-server`), [`transcribe.cpp`](https://github.com/handy-computer/transcribe.cpp), [Hex](https://github.com/anomalyco/hex) (macOS), edge devices |
+| [`koelony/Qwen3-ASR-0.6B-Cantonese-HK-GGUF`](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK-GGUF) | 0.6B GGUF `Q4_K_M` / `Q6_K` / `Q8_0` + `mmproj-Q8_0`, plus [`transcribe-cpp/`](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK-GGUF/tree/main/transcribe-cpp) single-file GGUF | 397–639 MB + 214 MB (`transcribe-cpp/`: 590–850 MB) | `llama.cpp` (`llama-server`), edge devices; also compatible with [`transcribe.cpp`](https://github.com/handy-computer/transcribe.cpp) / [Hex](https://github.com/anomalyco/hex) (macOS) |
 
 ## Benchmark
 
@@ -168,6 +168,9 @@ curl http://127.0.0.1:8180/v1/chat/completions -H "Content-Type: application/jso
 ```
 
 ## Quick start (`transcribe.cpp` / Hex on macOS)
+
+[`transcribe.cpp`](https://github.com/handy-computer/transcribe.cpp) and [Hex](https://github.com/anomalyco/hex) are independent third-party projects, not affiliated with Koelony. We publish
+single-file GGUFs so their users can run our model.
 
 All-in-one single-file GGUFs (`general.architecture = qwen3_asr`, **no separate `mmproj` required**) are published in the `transcribe-cpp/` subfolder of both GGUF repos:
 
