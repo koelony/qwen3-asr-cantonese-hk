@@ -28,11 +28,12 @@ Part of [Koelony](https://koelony.com), open-source models for Hong Kong Cantone
 ## Try it in your browser
 
 **[demo.koelony.com](https://demo.koelony.com)** ([English](https://demo.koelony.com/en/)) runs the 0.6B model (int8
-ONNX, about 1.16 GB, cached after the first load) entirely in the browser with WebGPU, falling back to WASM. Pick or
+ONNX, about 1.17 GB, cached after the first load) entirely in the browser with WebGPU, falling back to WASM. Pick or
 drop an audio file, or record from the microphone; no audio leaves the device.
 
-The browser demo source is maintained in the private `koelony/demo-site` repository (moved out of this repository on
-2026-11-22).
+The model files are the int8 ONNX export in
+[`koelony/Qwen3-ASR-0.6B-Cantonese-HK-ONNX`](https://huggingface.co/koelony/Qwen3-ASR-0.6B-Cantonese-HK-ONNX). The demo
+app itself is no longer part of this repository.
 
 ## Available weights & quantizations
 
